@@ -1,0 +1,107 @@
+local lp = game.Players.LocalPlayer
+local char = lp.Character
+for _, v in pairs(getconnections(char.Humanoid:GetPropertyChangedSignal("WalkSpeed"))) do
+    v:Disable()
+end
+local library =
+    (loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wall%20v3")))()
+function Notifications(Message)
+    game.StarterGui:SetCore(
+        "SendNotification",
+        {
+            Title = "Notifications",
+            Text = Message,
+            Duration = 3
+        }
+    )
+end
+
+local w = library:CreateWindow("eovqx OFL Hub Gui")
+local b = w:CreateFolder("~Functions~")
+b:Slider(
+    "Walkspeed",
+    {
+        min = 10,
+        max = 50,
+        precise = true
+    },
+    function(value)
+        char.Humanoid.WalkSpeed = value
+    end
+)
+b:Bind(
+    "Grab Nesrest Ball",
+    Enum.KeyCode.C,
+    function()
+        for i, v in pairs(game.workspace:GetChildren()) do
+            if v.Name == "Football" then
+                firetouchinterest(char.PrimaryPart, v, 0)
+                firetouchinterest(char.PrimaryPart, v, 1)
+            end
+        end
+        task.wait(0)
+        if char:FindFirstChild("Football") then
+            Notifications("Ball Caught")
+        end
+    end
+)
+local isToggled = false
+b:Bind(
+    "Sprint",
+    Enum.KeyCode.X,
+    function()
+        isToggled = not isToggled
+        if isToggled then
+            char.Humanoid.WalkSpeed = 20
+            Notifications("Sprint On")
+        else
+            char.Humanoid.WalkSpeed = 14
+            Notifications("Sprint Off")
+        end
+    end
+)
+local function OnRenderStepped2()
+    if AntiPushToggle then
+        for _, v in ipairs(game.Players.LocalPlayer.Character.HumanoidRootPart:GetChildren()) do
+            if v.Name == "Push" then
+                v:Destroy()
+            end
+        end
+    end
+end
+(game:GetService("RunService")).RenderStepped:Connect(OnRenderStepped2)
+b:Bind(
+    "Anti Push",
+    Enum.KeyCode.F,
+    function()
+        AntiPushToggle = not AntiPushToggle
+        if AntiPushToggle then
+            Notifications("Anti-Push On")
+        else
+            Notifications("Anti-Push Off")
+        end
+    end
+)
+local function OnRenderStepped()
+    if Noclip then
+        for _, v in ipairs(game.Players.LocalPlayer.Character:GetChildren()) do
+            if v:IsA("BasePart") then
+                v.CanCollide = false
+            end
+        end
+    end
+end
+(game:GetService("RunService")).RenderStepped:Connect(OnRenderStepped)
+b:Bind(
+    "Noclip",
+    Enum.KeyCode.Z,
+    function()
+        Noclip = not Noclip
+        if Noclip then
+            Notifications("Noclip On")
+        else
+            Notifications("Noclip Off")
+        end
+    end
+)
+b:DestroyGui()
